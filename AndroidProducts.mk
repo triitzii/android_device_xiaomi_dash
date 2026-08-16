@@ -1,7 +1,5 @@
-#
-# SPDX-FileCopyrightText: The LineageOS Project
-# SPDX-License-Identifier: Apache-2.0
-#
-
 PRODUCT_MAKEFILES := \
-    $(LOCAL_DIR)/lineage_dash.mk
+    $(LOCAL_DIR)/twrp_dash.mk
+
+COMMON_LUNCH_CHOICES := \
+    twrp_dash-eng

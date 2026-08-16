@@ -1,3 +1,6 @@
+import /init.recovery.keymint.rc
 on init
     setprop sys.usb.configfs 1
     setprop sys.usb.controller "16701000.usb0"
+on post-fs
+    mount erofs /dev/block/mapper/odm_a /odm ro

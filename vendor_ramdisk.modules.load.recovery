@@ -260,3 +260,5 @@ block2mtd.ko
 chipreg.ko
 mtdblock.ko
 mtd.ko
+xiaomi_touch_dash.ko
+nt38771_touch_dash.ko
