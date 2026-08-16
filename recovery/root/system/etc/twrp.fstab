@@ -1,12 +1,20 @@
-/system_root  erofs  /dev/block/mapper/system   flags=display="System";logical;slotselect
-/vendor       erofs  /dev/block/mapper/vendor   flags=display="Vendor";logical;slotselect
-/product      erofs  /dev/block/mapper/product  flags=display="Product";logical;slotselect
-/data         f2fs   /dev/block/by-name/userdata      flags=fileencryption=aes-256-xts:aes-256-cts:v2+inlinecrypt_optimized;wrappedkey
-/metadata     f2fs   /dev/block/by-name/metadata      flags=display="Metadata"
-/cache        ext4   /dev/block/by-name/rescue        flags=display="Cache"
-/boot         emmc   /dev/block/by-name/boot          flags=display="Boot";slotselect;backup=1;flashimg=1
-/vendor_boot  emmc   /dev/block/by-name/vendor_boot   flags=display="Vendor Boot";backup=1;flashimg=1
-/init_boot    emmc   /dev/block/by-name/init_boot     flags=display="Init Boot";slotselect;backup=1;flashimg=1
-/dtbo         emmc   /dev/block/by-name/dtbo          flags=display="DTBO";slotselect;backup=1;flashimg=1
-/persist      ext4   /dev/block/by-name/persist       flags=display="Persist";backup=1
-/usb_otg      auto   /dev/block/sda1                  flags=display="USB-OTG";storage;wipeingui;removable
+/system_root          erofs   /dev/block/mapper/system          flags=display="System";logical;slotselect
+/vendor               erofs   /dev/block/mapper/vendor          flags=display="Vendor";logical;slotselect
+/product              erofs   /dev/block/mapper/product         flags=display="Product";logical;slotselect
+/odm                  erofs   /dev/block/mapper/odm             flags=display="ODM";logical;slotselect
+/vendor_dlkm          erofs   /dev/block/mapper/vendor_dlkm     flags=display="Vendor DLKM";logical;slotselect
+
+/data                 f2fs    /dev/block/by-name/userdata       flags=fileencryption=aes-256-xts:aes-256-cts:v2+inlinecrypt_optimized;keydirectory=/metadata/vold/metadata_encryption;wrappedkey
+/metadata             f2fs    /dev/block/by-name/metadata       flags=display="Metadata"
+/cache                ext4    /dev/block/by-name/rescue         flags=display="Cache"
+
+/boot                 emmc    /dev/block/by-name/boot           flags=display="Boot";slotselect;backup=1;flashimg=1
+/vendor_boot          emmc    /dev/block/by-name/vendor_boot    flags=display="Vendor Boot";backup=1;flashimg=1
+/init_boot            emmc    /dev/block/by-name/init_boot      flags=display="Init Boot";slotselect;backup=1;flashimg=1
+/dtbo                 emmc    /dev/block/by-name/dtbo           flags=display="DTBO";slotselect;backup=1;flashimg=1
+/vbmeta               emmc    /dev/block/by-name/vbmeta         flags=display="Vbmeta";slotselect;backup=1;flashimg=1
+/vbmeta_system        emmc    /dev/block/by-name/vbmeta_system  flags=display="Vbmeta System";slotselect;backup=1;flashimg=1
+/vbmeta_vendor        emmc    /dev/block/by-name/vbmeta_vendor  flags=display="Vbmeta Vendor";slotselect;backup=1;flashimg=1
+/misc                 emmc    /dev/block/by-name/misc           flags=display="Misc"
+
+/usb_otg              auto    /dev/block/sda1                   flags=display="USB-OTG";storage;wipeingui;removable

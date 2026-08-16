@@ -25,10 +25,18 @@ service vendor.gatekeeper_mitee /vendor/bin/hw/android.hardware.gatekeeper-servi
 
 on fs
     mkdir /mnt/vendor/persist 0755 root root
-    mount ext4 /dev/block/by-name/persist /mnt/vendor/persist ro noatime nosuid nodev wait noload
-    mkdir /persist 0755 root root
-    mount none /mnt/vendor/persist /persist bind
-    mount erofs /dev/block/mapper/odm_a /odm ro
+    mount ext4 /dev/block/by-name/persist /mnt/vendor/persist noatime nosuid nodev
+    mkdir /mnt/vendor/persist/data 0755 system system
+    mkdir /mnt/vendor/persist/fdsd 0755 system system
+    mkdir /mnt/vendor/protect_f 0771 system system
+    mkdir /mnt/vendor/protect_s 0771 system system
+    mkdir /mnt/vendor/nvdata 0755 root root
+    mkdir /mnt/vendor/nvcfg 0755 root root
+    mount ext4 /dev/block/by-name/protect1 /mnt/vendor/protect_f noatime nosuid nodev
+    mount ext4 /dev/block/by-name/protect2 /mnt/vendor/protect_s noatime nosuid nodev
+    mount ext4 /dev/block/by-name/nvdata /mnt/vendor/nvdata noatime nosuid nodev
+    mount ext4 /dev/block/by-name/nvcfg /mnt/vendor/nvcfg noatime nosuid nodev
+
     chmod 0660 /dev/tee0
     chmod 0660 /dev/teepriv0
     chmod 0660 /dev/rpmb0
@@ -40,16 +48,19 @@ on fs
     chown system system /dev/ufs-bsg0
     setprop vendor.teefs_state ready
     setprop ro.hardware.gatekeeper mitee
-    start tee-supplicant
-
-on property:init.svc.tee-supplicant=running
-    start vendor.keymint-mitee
-    start vendor.gatekeeper_mitee
 
 service dash-latemount /system/bin/sh /system/bin/dash-latemount.sh
     user root
     oneshot
     disabled
+    seclabel u:r:recovery:s0
+
+service delayed_gatekeeper /system/bin/sh -c "sleep 1; start vendor.gatekeeper_mitee"
+    class core
+    user root
+    group root
+    disabled
+    oneshot
     seclabel u:r:recovery:s0
 
 on boot
