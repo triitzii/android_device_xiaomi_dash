@@ -3,15 +3,15 @@ service tee-supplicant /vendor/bin/tee-supplicant
     user system
     group system secure_element nfc
     capabilities SYS_RAWIO
-    setenv LD_LIBRARY_PATH /system/lib64/compat:/system/lib64
+    setenv LD_LIBRARY_PATH /system/lib64/compat:/vendor/lib64:/system/lib64
     seclabel u:r:recovery:s0
-    disabled
+    
 
 service vendor.keymint-mitee /vendor/bin/hw/android.hardware.security.keymint@3.0-service.mitee
     class early_hal
     user system
     group system drmrpc
-    setenv LD_LIBRARY_PATH /system/lib64/compat:/system/lib64
+    setenv LD_LIBRARY_PATH /system/lib64/compat:/vendor/lib64:/system/lib64
     seclabel u:r:recovery:s0
     disabled
 
@@ -19,7 +19,7 @@ service vendor.gatekeeper_mitee /vendor/bin/hw/android.hardware.gatekeeper-servi
     class hal
     user system
     group system
-    setenv LD_LIBRARY_PATH /system/lib64/compat:/system/lib64
+    setenv LD_LIBRARY_PATH /system/lib64/compat:/vendor/lib64:/system/lib64
     seclabel u:r:recovery:s0
     disabled
 
@@ -48,6 +48,11 @@ on fs
     chown system system /dev/ufs-bsg0
     setprop vendor.teefs_state ready
     setprop ro.hardware.gatekeeper mitee
+    start tee-supplicant
+
+on property:init.svc.tee-supplicant=running
+    start vendor.keymint-mitee
+    start delayed_gatekeeper
 
 service dash-latemount /system/bin/sh /system/bin/dash-latemount.sh
     user root

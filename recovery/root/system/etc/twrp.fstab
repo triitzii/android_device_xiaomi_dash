@@ -4,7 +4,7 @@
 /odm                  erofs   /dev/block/mapper/odm             flags=display="ODM";logical;slotselect
 /vendor_dlkm          erofs   /dev/block/mapper/vendor_dlkm     flags=display="Vendor DLKM";logical;slotselect
 
-/data                 f2fs    /dev/block/by-name/userdata       flags=fileencryption=aes-256-xts:aes-256-cts:v2;keydirectory=/metadata/vold/metadata_encryption;wrappedkey
+/data                 f2fs    /dev/block/by-name/userdata       flags=fileencryption=aes-256-xts:aes-256-cts:v2+inlinecrypt_optimized;keydirectory=/metadata/vold/metadata_encryption
 /metadata             f2fs    /dev/block/by-name/metadata       flags=display="Metadata"
 /cache                ext4    /dev/block/by-name/rescue         flags=display="Cache"
 
