@@ -54,11 +54,11 @@ chmod 0660 /dev/0:0:0:49476 /dev/0:0:0:49456 /dev/0:0:0:49488 /dev/rpmb0 /dev/uf
 chown system:system /dev/0:0:0:49476 /dev/0:0:0:49456 /dev/0:0:0:49488 /dev/rpmb0 /dev/ufs-bsg0 /dev/tee0 /dev/teepriv0
 
 # keymint + gatekeeper chain off tee-supplicant via init.recovery.keymint.rc
-#setprop ctl.start tee-supplicant
-#sleep 3
-#setprop ctl.restart vendor.keymint-mitee
-#setprop ctl.start delayed_gatekeeper      # was: ctl.restart vendor.gatekeeper_mitee
-#sleep 2
+setprop ctl.start tee-supplicant
+sleep 3
+setprop ctl.restart vendor.keymint-mitee
+setprop ctl.start delayed_gatekeeper      # was: ctl.restart vendor.gatekeeper_mitee
+sleep 2
 setprop apexd.status activated
 setprop sys.boot_completed 1
 i=0
