@@ -1,6 +1,7 @@
 #!/system/bin/sh
 exec > /dev/kmsg 2>&1
 set -x
+setenforce 0
 SLOT=$(getprop ro.boot.slot_suffix)
 echo "SLOT=[$SLOT]"
 ls -la /dev/block/mapper/
@@ -28,18 +29,15 @@ done
 
 echo "--- mounts after wait ---"
 grep -E " /vendor | /odm | /system_root " /proc/mounts
-[ -x /vendor/bin/tee-supplicant ] || { echo "FATAL: /vendor not mounted"; exit 1; }
+[ -x /vendor/bin/tee-supplicant ] || { echo "FATAL: /vendor not mounted"; exit 0; }
 
-# hide the StrongBox HAL declarations - no eSE/OMAPI stack in recovery,
-# and keystore2 blocks forever waiting for anything that is declared
+# Keystore2 blocks forever waiting for anything that is declared
 mount -o bind /system/etc/empty-device.xml /vendor/etc/vintf/manifest/android.hardware.security.keymint-service.strongbox.nxp.xml
 mount -o bind /system/etc/empty-device.xml /vendor/etc/vintf/manifest/android.hardware.security.sharedsecret-service.strongbox.nxp.xml
 
 # keystore2 database dir (its init rc references it but never creates it)
 mkdir -p /tmp/misc/keystore
 chmod 700 /tmp/misc/keystore
-
-setenforce 0
 
 # make crash reporting work
 cp /system_root/system/lib64/libprocinfo.so /system_root/system/lib64/libunwindstack.so /system/lib64/
@@ -69,3 +67,15 @@ while [ $i -lt 20 ]; do
 done
 sleep 3
 setprop ctl.restart keystore2
+
+insmod /lib/modules/nxp_i2c.ko
+insmod /lib/modules/p73.ko
+[ -e /dev/p73 ] || echo "WARN: /dev/p73 missing - weaver will fail"
+chmod 0660 /dev/p73
+chown 1027:1027 /dev/p73
+setprop ctl.start vendor.secure_element_hal_service
+sleep 2
+setprop ctl.start se_omapi
+sleep 2
+setprop ctl.start vendor.weaver_nxp
+sleep 2

@@ -20,6 +20,11 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     update_engine_sideload \
 
+#decryption
+PRODUCT_PACKAGES += \
+    se_omapi \
+    se_omapi.recovery
+
 # API
 
 # Boot animation

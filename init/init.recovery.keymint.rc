@@ -23,6 +23,31 @@ service vendor.gatekeeper_mitee /vendor/bin/hw/android.hardware.gatekeeper-servi
     seclabel u:r:recovery:s0
     disabled
 
+service vendor.weaver_nxp /vendor/bin/hw/android.hardware.weaver-service.nxp
+    class hal
+    user 2902
+    group system drmrpc
+    capabilities WAKE_ALARM
+    setenv LD_LIBRARY_PATH /system/lib64/compat:/system/lib64
+    seclabel u:r:recovery:s0
+    disabled
+
+service vendor.secure_element_hal_service /vendor/bin/hw/vendor.xiaomi.hardware.secure_element-service
+    class early_hal
+    user system
+    group system secure_element nfc
+    setenv LD_LIBRARY_PATH /system/lib64/compat:/system/lib64
+    seclabel u:r:recovery:s0
+    disabled
+
+service se_omapi /system/bin/se_omapi
+    class hal
+    user system
+    group system secure_element nfc
+    setenv LD_LIBRARY_PATH /system/lib64/compat:/system/lib64
+    seclabel u:r:recovery:s0
+    disabled
+
 on fs
     mkdir /mnt/vendor/persist 0755 root root
     mount ext4 /dev/block/by-name/persist /mnt/vendor/persist noatime nosuid nodev
