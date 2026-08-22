@@ -30,7 +30,7 @@ mkdir -p device/xiaomi/dash && git clone https://github.com/triitzii/android_dev
 mkdir -p device/xiaomi/dash-kernel && git clone https://github.com/triitzii/android_device_xiaomi_dash_kernel device/xiaomi/dash-kernel ##Clones the device's kernel-source into the device tree
 ```
 ## Set up repacker and apply patches to OrangeFox
-### You need to supply your ROMs stock vendor_boot.img for this step!
+### You need to supply your ROM's stock vendor_boot.img for this step!
 ```
 mkdir ~/vb
 git clone https://github.com/triitzii/dash-recovery-tools ~/vb && cd ~/vb
