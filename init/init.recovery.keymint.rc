@@ -48,6 +48,15 @@ service se_omapi /system/bin/se_omapi
     seclabel u:r:recovery:s0
     disabled
 
+service touchfeature-service /odm/bin/hw/vendor.xiaomi.hw.touchfeature-service
+    class hal
+    user root
+    group root system input
+    capabilities SYS_NICE
+    setenv LD_LIBRARY_PATH /odm/lib64:/system/lib64/compat:/system/lib64
+    seclabel u:r:recovery:s0
+    disabled
+
 on fs
     mkdir /mnt/vendor/persist 0755 root root
     mount ext4 /dev/block/by-name/persist /mnt/vendor/persist noatime nosuid nodev

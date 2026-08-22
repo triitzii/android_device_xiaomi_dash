@@ -79,3 +79,6 @@ setprop ctl.start se_omapi
 sleep 2
 setprop ctl.start vendor.weaver_nxp
 sleep 2
+chmod 0666 /dev/xiaomi-touch
+chown system system /dev/xiaomi-touch
+setprop ctl.start touchfeature-service
