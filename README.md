@@ -46,7 +46,8 @@ export FOX_BUILD_DEVICE=dash
 export LC_ALL="C"
 export FOX_AB_DEVICE
 export FOX_VIRTUAL_AB_DEVICE
-export FOX_ADD_API_V36_PREBUILT
+export FOX_ADD_API_V36_PREBUILT=2
+OF_USE_LEGACY_BATTERY_SERVICES=1
 lunch twrp_dash-ap2a-eng
 mka adbd vendorbootimage
 ```
