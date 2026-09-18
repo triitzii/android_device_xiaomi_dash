@@ -82,3 +82,10 @@ sleep 2
 chmod 0666 /dev/xiaomi-touch
 chown system system /dev/xiaomi-touch
 setprop ctl.start touchfeature-service
+
+#USB
+mkdir -p /config/usb_gadget/g1/os_desc
+[ -e /config/usb_gadget/g1/os_desc/b.1 ] || ln -s /config/usb_gadget/g1/configs/b.1 /config/usb_gadget/g1/os_desc/b.1
+echo 1 > /config/usb_gadget/g1/os_desc/use
+echo 0xBC > /config/usb_gadget/g1/os_desc/b_vendor_code
+echo MSFT100 > /config/usb_gadget/g1/os_desc/qw_sign
