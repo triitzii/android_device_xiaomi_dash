@@ -35,6 +35,9 @@ grep -E " /vendor | /odm | /system_root " /proc/mounts
 mount -o bind /system/etc/empty-device.xml /vendor/etc/vintf/manifest/android.hardware.security.keymint-service.strongbox.nxp.xml
 mount -o bind /system/etc/empty-device.xml /vendor/etc/vintf/manifest/android.hardware.security.sharedsecret-service.strongbox.nxp.xml
 
+#vendor.health-default service
+setprop ctl.start vendor.health-default
+
 # keystore2 database dir (its init rc references it but never creates it)
 mkdir -p /tmp/misc/keystore
 chmod 700 /tmp/misc/keystore

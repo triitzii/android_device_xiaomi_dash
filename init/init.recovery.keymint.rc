@@ -100,11 +100,20 @@ service delayed_gatekeeper /system/bin/sh -c "sleep 1; start vendor.gatekeeper_m
 on boot
     start dash-latemount
 
-service usb-unbind /system/bin/sh -c "echo '' > /config/usb_gadget/g1/UDC; sleep 1; rm -f /config/usb_gadget/g1/configs/b.1/f1"
+service usb-unbind /system/bin/sh -c "while pidof adbd; do sleep 0.2; done; echo '' > /config/usb_gadget/g1/UDC; sleep 1; rm -f /config/usb_gadget/g1/configs/b.1/f1; setprop sys.usb.ffs.ready 1"
     oneshot
     disabled
     seclabel u:r:recovery:s0
 
 on property:sys.usb.config=none && property:sys.usb.configfs=1
     exec_start usb-unbind
-
+    
+service vendor.health-default /vendor/bin/hw/android.hardware.health-service.example
+    class hal
+    user system
+    group system
+    capabilities WAKE_ALARM BLOCK_SUSPEND
+    file /dev/kmsg w
+    setenv LD_LIBRARY_PATH /system/lib64/compat:/system/lib64
+    seclabel u:r:recovery:s0
+    disabled
