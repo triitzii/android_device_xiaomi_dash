@@ -38,6 +38,14 @@ mount -o bind /system/etc/empty-device.xml /vendor/etc/vintf/manifest/android.ha
 #vendor.health-default service
 setprop ctl.start vendor.health-default
 
+#MTP driver
+mkdir -p /dev/usb-ffs/mtp
+chmod 0770 /dev/usb-ffs/mtp
+chown system:system /dev/usb-ffs/mtp
+mkdir -p /config/usb_gadget/g1/functions/ffs.mtp
+mount -t functionfs mtp /dev/usb-ffs/mtp -o uid=1000,gid=1000,rmode=0770,fmode=0660
+ls -la /dev/usb-ffs/mtp
+
 # keystore2 database dir (its init rc references it but never creates it)
 mkdir -p /tmp/misc/keystore
 chmod 700 /tmp/misc/keystore

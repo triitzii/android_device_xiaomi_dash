@@ -107,6 +107,8 @@ service usb-unbind /system/bin/sh -c "while pidof adbd; do sleep 0.2; done; echo
 
 on property:sys.usb.config=none && property:sys.usb.configfs=1
     exec_start usb-unbind
+    setprop sys.usb.ffs.mtp.ready 0
+    rm /config/usb_gadget/g1/configs/b.1/f2
     
 service vendor.health-default /vendor/bin/hw/android.hardware.health-service.example
     class hal
@@ -117,3 +119,33 @@ service vendor.health-default /vendor/bin/hw/android.hardware.health-service.exa
     setenv LD_LIBRARY_PATH /system/lib64/compat:/system/lib64
     seclabel u:r:recovery:s0
     disabled
+
+on post-fs
+    mkdir /config/usb_gadget/g1/functions/ffs.mtp
+    mkdir /dev/usb-ffs/mtp 0770 mtp mtp
+    mount functionfs mtp /dev/usb-ffs/mtp rmode=0770,fmode=0660,uid=1024,gid=1024,no_disconnect=1
+    write /config/usb_gadget/g1/functions/ffs.mtp/os_desc/interface.MTP/compatible_id "MTP"
+    setprop sys.usb.mtp.device_type 3
+    setprop sys.usb.mtp.batchcancel 1
+    write /config/usb_gadget/g1/os_desc/use 1
+    write /config/usb_gadget/g1/os_desc/b_vendor_code 0x1
+    write /config/usb_gadget/g1/os_desc/qw_sign "MSFT100"
+    symlink /config/usb_gadget/g1/configs/b.1 /config/usb_gadget/g1/os_desc/b.1
+
+on property:sys.usb.config=mtp,adb && property:sys.usb.configfs=1
+    start adbd
+    start mtp-ready
+
+on property:sys.usb.ffs.ready=1 && property:sys.usb.ffs.mtp.ready=1 && property:sys.usb.config=mtp,adb && property:sys.usb.configfs=1
+    write /config/usb_gadget/g1/configs/b.1/strings/0x409/configuration "mtp_adb"
+    write /config/usb_gadget/g1/idVendor 0x18D1
+    write /config/usb_gadget/g1/idProduct 0x4EE2
+    symlink /config/usb_gadget/g1/functions/ffs.mtp /config/usb_gadget/g1/configs/b.1/f1
+    symlink /config/usb_gadget/g1/functions/ffs.adb /config/usb_gadget/g1/configs/b.1/f2
+    write /config/usb_gadget/g1/UDC ${sys.usb.controller}
+    setprop sys.usb.state ${sys.usb.config}
+
+service mtp-ready /system/bin/sh -c "sleep 3; setprop sys.usb.ffs.mtp.ready 1"
+    oneshot
+    disabled
+    seclabel u:r:recovery:s0

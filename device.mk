@@ -90,3 +90,6 @@ PRODUCT_SOONG_NAMESPACES += \
 
 # Inherit the proprietary files
 
+# enabling mtp functionality
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/recovery/root/system/bin/mtp-on.sh:$(TARGET_COPY_OUT_RECOVERY)/root/system/bin/mtp-on.sh
